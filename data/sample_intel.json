@@ -1,0 +1,74 @@
+[
+  {
+    "id": "OSINT-001",
+    "type": "OSINT",
+    "title": "Social Media Activity Spike",
+    "lat": 28.6139,
+    "lng": 77.2090,
+    "description": "Unusual social media chatter detected around Delhi region. Keywords: convoy, movement, supply.",
+    "source": "Twitter/X Monitor",
+    "timestamp": "2024-01-15T08:30:00Z",
+    "threat_level": "medium",
+    "image": null
+  },
+  {
+    "id": "HUMINT-001",
+    "type": "HUMINT",
+    "title": "Field Agent Report Alpha",
+    "lat": 28.7041,
+    "lng": 77.1025,
+    "description": "Asset reports increased vehicle movements near northern sector. Estimated 12-15 heavy vehicles observed between 0200-0400 hrs.",
+    "source": "Agent BRAVO-7",
+    "timestamp": "2024-01-15T06:00:00Z",
+    "threat_level": "high",
+    "image": null
+  },
+  {
+    "id": "IMINT-001",
+    "type": "IMINT",
+    "title": "Satellite Imagery — Sector 4",
+    "lat": 28.5355,
+    "lng": 77.3910,
+    "description": "High-resolution satellite pass confirms structural changes at target location. New construction visible.",
+    "source": "SAT-RECON-04",
+    "timestamp": "2024-01-15T05:00:00Z",
+    "threat_level": "high",
+    "image": "/static/images/sample_imint.jpg"
+  },
+  {
+    "id": "OSINT-002",
+    "type": "OSINT",
+    "title": "News Wire Alert",
+    "lat": 19.0760,
+    "lng": 72.8777,
+    "description": "Multiple news agencies reporting unverified explosions near coastal zones. Correlating with SIGINT feeds.",
+    "source": "Reuters Monitor",
+    "timestamp": "2024-01-15T10:15:00Z",
+    "threat_level": "low",
+    "image": null
+  },
+  {
+    "id": "HUMINT-002",
+    "type": "HUMINT",
+    "title": "Border Crossing Report",
+    "lat": 32.0840,
+    "lng": 76.9820,
+    "description": "Irregular crossings reported at mountain pass. Persons of interest: 3 individuals, unknown origin.",
+    "source": "Border Watch Unit",
+    "timestamp": "2024-01-14T22:00:00Z",
+    "threat_level": "critical",
+    "image": null
+  },
+  {
+    "id": "IMINT-002",
+    "type": "IMINT",
+    "title": "UAV Surveillance Feed",
+    "lat": 23.2599,
+    "lng": 77.4126,
+    "description": "Drone imagery captured large gathering. Vehicle count: 30+. Pattern suggests coordinated activity.",
+    "source": "UAV-SHADOW-2",
+    "timestamp": "2024-01-15T09:45:00Z",
+    "threat_level": "medium",
+    "image": null
+  }
+]

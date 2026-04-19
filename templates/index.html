@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>STRATFUSION — Intelligence Dashboard</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/static/css/style.css"/>
+</head>
+<body>
+
+<!-- ── SCANLINE OVERLAY ── -->
+<div class="scanlines"></div>
+
+<!-- ── HEADER ── -->
+<header class="hdr">
+  <div class="hdr-left">
+    <div class="logo-mark">◈</div>
+    <div>
+      <div class="hdr-title">STRATFUSION</div>
+      <div class="hdr-sub">MULTI-SOURCE INTELLIGENCE FUSION SYSTEM · v4.2.1</div>
+    </div>
+  </div>
+  <div class="hdr-center">
+    <div class="status-bar">
+      <span class="pulse-dot"></span>
+      <span id="sys-status">SYSTEM ONLINE</span>
+      <span class="sep">|</span>
+      <span id="live-time"></span>
+      <span class="sep">|</span>
+      <span>CLASSIFICATION: <b class="red">TOP SECRET</b></span>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div class="stat-chip" id="chip-total"><span class="chip-val" id="s-total">—</span><span class="chip-lbl">NODES</span></div>
+    <div class="stat-chip osint-c" id="chip-o"><span class="chip-val" id="s-osint">—</span><span class="chip-lbl">OSINT</span></div>
+    <div class="stat-chip humint-c" id="chip-h"><span class="chip-val" id="s-humint">—</span><span class="chip-lbl">HUMINT</span></div>
+    <div class="stat-chip imint-c" id="chip-i"><span class="chip-val" id="s-imint">—</span><span class="chip-lbl">IMINT</span></div>
+  </div>
+</header>
+
+<!-- ── MAIN LAYOUT ── -->
+<div class="layout">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="panel">
+      <div class="panel-hdr">◧ FILTER NODES</div>
+      <div class="filter-row">
+        <button class="fbtn active" data-filter="ALL">ALL</button>
+        <button class="fbtn osint-c" data-filter="OSINT">OSINT</button>
+        <button class="fbtn humint-c" data-filter="HUMINT">HUMINT</button>
+        <button class="fbtn imint-c" data-filter="IMINT">IMINT</button>
+      </div>
+      <div class="filter-row mt8">
+        <button class="fbtn threat-c" data-threat="critical">CRITICAL</button>
+        <button class="fbtn threat-h" data-threat="high">HIGH</button>
+        <button class="fbtn threat-m" data-threat="medium">MED</button>
+        <button class="fbtn threat-l" data-threat="low">LOW</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-hdr">◧ DATA INGESTION</div>
+      <div id="drop-zone" class="drop-zone">
+        <div class="drop-icon">⬆</div>
+        <div class="drop-text">DROP FILES HERE</div>
+        <div class="drop-sub">CSV · XLSX · JSON · JPG/JPEG</div>
+        <input type="file" id="file-input" multiple accept=".csv,.xlsx,.json,.jpg,.jpeg" hidden/>
+      </div>
+      <button class="action-btn" onclick="document.getElementById('file-input').click()">SELECT FILES</button>
+      <div id="upload-status" class="upload-status"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-hdr">◧ INTEL FEED</div>
+      <div id="intel-list" class="intel-list"></div>
+    </div>
+
+  </aside>
+
+  <!-- MAP -->
+  <main class="map-wrap">
+    <div id="map"></div>
+    <div class="map-overlay-tl">
+      <div class="coord-display" id="coord-display">LAT — · LNG —</div>
+    </div>
+    <div class="map-legend">
+      <div class="legend-item"><span class="ldot osint-dot"></span>OSINT</div>
+      <div class="legend-item"><span class="ldot humint-dot"></span>HUMINT</div>
+      <div class="legend-item"><span class="ldot imint-dot"></span>IMINT</div>
+    </div>
+  </main>
+
+</div>
+
+<!-- ── INTEL MODAL ── -->
+<div id="modal" class="modal hidden">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div>
+        <span class="modal-badge" id="m-type">OSINT</span>
+        <span class="modal-title" id="m-title">Intel Title</span>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="m-image-wrap" class="m-image-wrap hidden">
+        <img id="m-image" src="" alt="IMINT"/>
+        <div class="img-label">IMINT IMAGERY</div>
+      </div>
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-lbl">SOURCE</span><span class="meta-val" id="m-source"></span></div>
+        <div class="meta-item"><span class="meta-lbl">TIMESTAMP</span><span class="meta-val" id="m-time"></span></div>
+        <div class="meta-item"><span class="meta-lbl">COORDINATES</span><span class="meta-val" id="m-coords"></span></div>
+        <div class="meta-item"><span class="meta-lbl">THREAT LEVEL</span><span class="meta-val" id="m-threat"></span></div>
+      </div>
+      <div class="m-desc" id="m-desc"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="/static/js/dashboard.js"></script>
+</body>
+</html>
