@@ -1,9 +1,8 @@
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from config import Config
-import os, json, base64, uuid
+import os, json, uuid, csv, io
 from datetime import datetime
-import pandas as pd
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -72,26 +71,51 @@ def get_intel():
 def upload():
     results = []
 
-    # ── CSV / Excel ──────────────────────────────────────────────
-    for key in ("csv_file", "excel_file"):
-        f = request.files.get(key)
-        if f:
-            ext = f.filename.rsplit(".", 1)[-1].lower()
-            path = os.path.join(app.config["UPLOAD_FOLDER"], f.filename)
-            f.save(path)
-            try:
-                df = pd.read_csv(path) if ext == "csv" else pd.read_excel(path)
-                required = {"lat", "lng", "title", "type"}
-                if not required.issubset(df.columns):
-                    return jsonify({"status": "error",
-                                    "message": f"Missing columns. Need: {required}"}), 400
-                df["id"] = [f"UPLOAD-{uuid.uuid4().hex[:8].upper()}" for _ in range(len(df))]
-                df["timestamp"] = datetime.utcnow().isoformat() + "Z"
-                df["source"] = "Manual Upload"
-                df = df.where(pd.notna(df), None)
-                results.extend(df.to_dict(orient="records"))
-            except Exception as e:
-                return jsonify({"status": "error", "message": str(e)}), 500
+    # ── CSV ──────────────────────────────────────────────────────
+    f = request.files.get("csv_file")
+    if f:
+        try:
+            content = f.read().decode("utf-8")
+            reader = csv.DictReader(io.StringIO(content))
+            for row in reader:
+                if "lat" in row and "lng" in row:
+                    results.append({
+                        "id": f"UPLOAD-{uuid.uuid4().hex[:8].upper()}",
+                        "type": row.get("type", "OSINT"),
+                        "title": row.get("title", "Uploaded Node"),
+                        "lat": float(row["lat"]),
+                        "lng": float(row["lng"]),
+                        "description": row.get("description", ""),
+                        "source": "Manual Upload",
+                        "timestamp": datetime.utcnow().isoformat() + "Z",
+                        "threat_level": row.get("threat_level", "low"),
+                        "image": None
+                    })
+        except Exception as e:
+            return jsonify({"status": "error", "message": str(e)}), 500
+
+    # ── Excel ─────────────────────────────────────────────────────
+    ef = request.files.get("excel_file")
+    if ef:
+        try:
+            content = ef.read().decode("utf-8", errors="ignore")
+            reader = csv.DictReader(io.StringIO(content))
+            for row in reader:
+                if "lat" in row and "lng" in row:
+                    results.append({
+                        "id": f"UPLOAD-{uuid.uuid4().hex[:8].upper()}",
+                        "type": row.get("type", "OSINT"),
+                        "title": row.get("title", "Uploaded Node"),
+                        "lat": float(row["lat"]),
+                        "lng": float(row["lng"]),
+                        "description": row.get("description", ""),
+                        "source": "Manual Upload",
+                        "timestamp": datetime.utcnow().isoformat() + "Z",
+                        "threat_level": row.get("threat_level", "low"),
+                        "image": None
+                    })
+        except Exception as e:
+            return jsonify({"status": "error", "message": str(e)}), 500
 
     # ── JSON ─────────────────────────────────────────────────────
     jf = request.files.get("json_file")
@@ -114,8 +138,8 @@ def upload():
             return jsonify({"status": "error", "message": "Only JPG/PNG images"}), 400
         fname = f"imint_{uuid.uuid4().hex[:8]}.{ext}"
         img.save(os.path.join("static/images", fname))
-        lat  = float(request.form.get("lat", 28.6139))
-        lng  = float(request.form.get("lng", 77.2090))
+        lat = float(request.form.get("lat", 28.6139))
+        lng = float(request.form.get("lng", 77.2090))
         results.append({
             "id": f"IMINT-{uuid.uuid4().hex[:8].upper()}",
             "type": "IMINT",
@@ -146,6 +170,5 @@ def stats():
     })
 
 if __name__ == "__main__":
-    import os
     port = int(os.environ.get("PORT", 5000))
     app.run(debug=False, host="0.0.0.0", port=port)
