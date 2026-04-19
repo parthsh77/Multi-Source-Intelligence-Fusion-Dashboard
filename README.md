@@ -148,7 +148,7 @@ py app.py
 Open the application in your browser:
 
 ```text
-http://localhost:5000
+https://multi-source-intelligence-fusion-lfaq.onrender.com
 ```
 
 ---
